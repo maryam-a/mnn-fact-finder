@@ -11,7 +11,6 @@ $(document).ready(function () {
                 zipcode: $("#zip-code").val()
             },
             "success": function (response) {
-                // console.log(response.county_fip)
                 $.ajax(BASE_URL, {
                     "method": "GET",
                     "data": {
@@ -21,8 +20,7 @@ $(document).ready(function () {
                         key: KEY
                     },
                     "success": function (resp) {
-                        // var numPeople = JSON.stringify(resp[1][1]);
-                        console.log(resp);
+                        console.log(JSON.stringify(resp[1][1]));
                     }
                 });
             }
