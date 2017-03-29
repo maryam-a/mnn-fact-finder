@@ -1,4 +1,4 @@
-var COUNTY_IDS = {
+var COUNTY_FIPS = {
     "Barnstable County" : "001",
     "Berkshire County" : "003",
     "Bristol County" : "005",
@@ -12,4 +12,6 @@ var COUNTY_IDS = {
     "Suffolk County" : "025",
     "Worcester County" : "027"
 }
+
+module.exports = COUNTY_FIPS;
 
