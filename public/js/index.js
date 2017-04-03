@@ -3,7 +3,8 @@ var BASE_URL = "http://api.census.gov/data/2015/acs1";
 
 $(document).ready(function () {
     $(document).on('click', "#submit", function (e) {
-        var incomeChoice = $('#income option:selected').val();
+        var incomeChoice = $('#income-options option:selected').val();
+        var demographicChoice = $('#demographic-options option:selected').val();
 
         $.ajax("/income", {
             "method": "POST",
@@ -14,13 +15,13 @@ $(document).ready(function () {
                 $.ajax(BASE_URL, {
                     "method": "GET",
                     "data": {
-                        get: "NAME," + incomeChoice,
+                        get: "NAME," + demographicChoice + incomeChoice,
                         for: "county:" + response.county_fip,
                         in: "state:" + STATE_FIP,
                         key: KEY
                     },
                     "success": function (resp) {
-                        console.log(JSON.stringify(resp[1][1]));
+                        $("#response").text(resp[1][1]);
                     }
                 });
             }
