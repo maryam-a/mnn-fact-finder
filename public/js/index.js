@@ -15,13 +15,13 @@ $(document).ready(function () {
                 $.ajax(BASE_URL, {
                     "method": "GET",
                     "data": {
-                        get: "NAME," + demographicChoice + incomeChoice,
+                        get: "NAME," + INCOME_BRACKETS,
                         for: "county:" + response.county_fip,
                         in: "state:" + STATE_FIP,
                         key: KEY
                     },
                     "success": function (resp) {
-                        $("#response").text(resp[1][1]);
+                        console.log(JSON.stringify(resp));
                     }
                 });
             }

@@ -5,7 +5,7 @@
 2. Get an API key from the [United States Census Bureau's Developer page](http://api.census.gov/data/key_signup.html)
 3. Create a file `settings.js` in the top level directory with
  ```javascript
- var KEY = <your-key>;
+ var KEY = "<your-key>";
  ```
 4. `npm install`
 5. `npm start`
