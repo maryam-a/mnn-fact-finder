@@ -21,6 +21,16 @@ $(document).ready(function () {
                     },
                     "success": function (resp) {
                         console.log(JSON.stringify(resp[1][1]));
+                        console.log(resp)
+                        var data = [
+                          {
+                            x: ['giraffes', 'orangutans', 'monkeys'],
+                            y: [20, 14, 23],
+                            type: 'bar'
+                          }
+                        ];
+
+                        Plotly.newPlot('myDiv', data);
                     }
                 });
             }
