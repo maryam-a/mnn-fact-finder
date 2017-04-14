@@ -17,7 +17,6 @@
         crossorigin="anonymous"></script>
     <!--Constant Javascript Files-->
     <script src="/js/settings.js"></script>
-    <script src="/js/income-brackets.js"></script>
     <!--Third Party-->
     <script src="/third-party/bootstrap-tagsinput.js"></script>
     <script src="/third-party/typeahead.bundle.js"></script>
@@ -36,14 +35,10 @@
         </div>
 
         <div class="row" id="location-info">
-            <h3>Zip Code</h3>
-            <input type="text" id="zip-code" name="zip-code">
-            <button type="button" class="btn btn-success" id="submit">Submit</button>
-
-            
-            <input type="text" value="Middlesex" data-role="tagsinput" />
+            <h3>Counties to compare</h3>
+            <input id="county-input" type="text" value="" data-role="tagsinput" />
             <script>
-                // Resource: https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/tree/master/examples
+                // Resource: https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/tree/master/examples-->
                 var countynames = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -58,7 +53,7 @@
                 });
                 countynames.initialize();
 
-                $('input').tagsinput({
+                $('#county-input').tagsinput({
                     typeaheadjs: {
                         name: 'countynames',
                         displayKey: 'name',
@@ -66,8 +61,8 @@
                         source: countynames.ttAdapter()
                     }
                 });
-
             </script>
+            <button type="button" class="btn btn-success" id="submit">Submit</button>
         </div>
 
         <div class="row" id="results">
