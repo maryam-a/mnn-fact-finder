@@ -17,7 +17,7 @@
     "url": "https://github.com/maryam-a/mnn-fact-finder/issues"
   },
   "homepage": "https://github.com/maryam-a/mnn-fact-finder#readme",
-  "devDependencies": {
+  "dependencies": {
     "express": "^4.15.2",
     "assert": "^1.4.1",
     "body-parser": "^1.15.2",
