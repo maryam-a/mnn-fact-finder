@@ -60,8 +60,6 @@ $(document).ready(function () {
                     }
                 }
 
-                console.log(resp);
-
                 for (i = 1; i < resp.length; i++) { 
                     data.push({
                         x: INCOME_LABELS,
