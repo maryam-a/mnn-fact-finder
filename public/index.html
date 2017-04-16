@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="Maryam Archie, Harini Suresh">
-    <title>Fact Finder Tool - Massachusetts Nonprofit Network</title>
+    <title>Commonwealth Stats - Massachusetts Nonprofit Network</title>
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
@@ -25,8 +25,8 @@
 
     <!--Third Party-->
     <script src="/third-party/bootstrap-tagsinput.js"></script>
+    <script src="/third-party/typeahead.bundle.js"></script>
     <link rel="stylesheet" href="/third-party/bootstrap-tagsinput.css">
-    <link rel="stylesheet" href="/third-party/bootstrap-tagsinput-typeahead.css">
     <!--Main Javascript-->
     <script src="/js/index.js"></script>
 
@@ -39,43 +39,36 @@
         <!--B19025 - Aggregate Household Income in the Past 12 Months (in 2015 Inflation Adjusted Dollars)-->
         <div class="row" id="income">
             <h3>Household Income in the Past 12 Months (in 2015 Inflation-Adjusted Dollars)</h3>
-            <select id="income-options">
-                <!--<option value="B19001_001E">Total:</option>-->
-                <option value="002E">Less than &#36;10,000</option>
-                <option value="003E">&#36;10,000 to &#36;14,999</option>
-                <option value="004E">&#36;15,000 to &#36;19,999</option>
-                <option value="005E">&#36;20,000 to &#36;24,999</option>
-                <option value="006E">&#36;25,000 to &#36;29,999</option>
-                <option value="007E">&#36;30,000 to &#36;34,999</option>
-                <option value="008E">&#36;35,000 to &#36;39,999</option>
-                <option value="009E">&#36;40,000 to &#36;44,999</option>
-                <option value="010E">&#36;45,000 to &#36;49,999</option>
-                <option value="011E">&#36;50,000 to &#36;59,999</option>
-                <option value="012E">&#36;60,000 to &#36;74,999</option>
-                <option value="013E">&#36;75,000 to &#36;99,999</option>
-                <option value="014E">&#36;100,000 to &#36;124,999</option>
-                <option value="015E">&#36;125,000 to &#36;149,999</option>
-                <option value="016E">&#36;150,000 to &#36;199,999</option>
-                <option value="017E">&#36;200,000 or more</option>
-            </select>
-
-            <select id="demographic-options">
-                <option selected="selected" value="B19001_">General</option>
-                <option value="B19001A_">White Alone Householder</option>
-                <option value="B19001B_">Black or African American Alone Householder</option>
-                <option value="B19001C_">American Indian and Alaska Native Alone Householder</option>
-                <option value="B19001D_">Asian Alone Householder</option>
-                <option value="B19001E_">Native Hawaiian and Other Pacific Islander Alone Householder</option>
-                <option value="B19001F_">Some Other Race Alone Householder</option>
-                <option value="B19001G_">Two or More Races Householder</option>
-                <option value="B19001H_">White Alone, Not Hispanic or Latino Householder</option>
-                <option value="B19001I_">Hispanic or Latino Householder</option>
-            </select>
         </div>
 
         <div class="row" id="location-info">
-            <h3>Zip Code</h3>
-            <input type="text" id="zip-code" name="zip-code">
+            <h3>Counties to compare</h3>
+            <input id="county-input" type="text" value="" data-role="tagsinput" />
+            <script>
+                // Resource: https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/tree/master/examples-->
+                var countynames = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    prefetch: {
+                        url: 'countynames.json',
+                        filter: function (list) {
+                            return $.map(list, function (countyname) {
+                                return { name: countyname };
+                            });
+                        }
+                    }
+                });
+                countynames.initialize();
+
+                $('#county-input').tagsinput({
+                    typeaheadjs: {
+                        name: 'countynames',
+                        displayKey: 'name',
+                        valueKey: 'name',
+                        source: countynames.ttAdapter()
+                    }
+                });
+            </script>
             <button type="button" class="btn btn-success" id="submit">Submit</button>
         </div>
 

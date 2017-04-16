@@ -1,5 +1,5 @@
 {
-  "name": "mnn-fact-finder",
+  "name": "commonwealth-stats",
   "version": "1.0.0",
   "description": "Tool for Nonprofits",
   "main": "app.js",
@@ -18,9 +18,6 @@
   },
   "homepage": "https://github.com/maryam-a/mnn-fact-finder#readme",
   "dependencies": {
-    "us-zcta-counties": "0.0.2"
-  },
-  "devDependencies": {
     "express": "^4.15.2",
     "assert": "^1.4.1",
     "body-parser": "^1.15.2",
