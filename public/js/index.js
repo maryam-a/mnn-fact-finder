@@ -1,5 +1,5 @@
 var STATE_FIP = "25";
-var BASE_URL = "http://api.census.gov/data/2015/acs1";
+var BASE_URL = "https://api.census.gov/data/2015/acs1";
 
 var COUNTY_FIPS = {
     "Barnstable": "001",
@@ -48,8 +48,8 @@ $(document).ready(function () {
                     key: json.KEY
                 },
                 "success": function (resp) {
-                    console.log(resp);
-                    console.log(INCOME_LABELS);
+                    // console.log(resp);
+                    // console.log(INCOME_LABELS);
                     var data = [];
 
                     if ($(".percentages").is(":checked")) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
                             var vals = resp[i].slice(1, -2);
                             var sum = vals.reduce(getSum)
                             var percentages = vals.map(function (x) { return x * 1.0 / sum });
-                            console.log(percentages);
+                            // console.log(percentages);
                             resp[i].slice(1, -2) = percentages;
                         }
                     }
