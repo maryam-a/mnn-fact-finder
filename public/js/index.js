@@ -2,18 +2,18 @@ var STATE_FIP = "25";
 var BASE_URL = "https://api.census.gov/data/2015/acs1";
 
 var COUNTY_FIPS = {
-    "Barnstable": "001",
-    "Berkshire": "003",
-    "Bristol": "005",
-    "Essex": "009",
-    "Franklin": "011",
-    "Hampden": "013",
-    "Hampshire": "015",
-    "Middlesex": "017",
-    "Norfolk": "021",
-    "Plymouth": "023",
-    "Suffolk": "025",
-    "Worcester": "027"
+    "barnstable": "001",
+    "berkshire": "003",
+    "bristol": "005",
+    "essex": "009",
+    "franklin": "011",
+    "hampden": "013",
+    "hampshire": "015",
+    "middlesex": "017",
+    "norfolk": "021",
+    "plymouth": "023",
+    "suffolk": "025",
+    "worcester": "027"
 }
 
 var INCOME_BRACKETS = "B19001_002E,B19001_003E,B19001_004E,B19001_005E,B19001_006E,B19001_007E,B19001_008E,B19001_009E,B19001_010E,B19001_011E,B19001_012E,B19001_013E,B19001_014E,B19001_015E,B19001_017E";
@@ -43,54 +43,59 @@ $(document).ready(function () {
 
         var countyInput = "";
 
-        // TODO: Ensure that there is valid input
-
         $(".label-info").each(function () {
-            countyInput += COUNTY_FIPS[$(this).text()] + ",";
-            ga('send', 'event', 'Counties', 'find', $(this).text());
+            // Only process valid input strings
+            var key = $(this).text().toLowerCase();
+            if (COUNTY_FIPS[key]) {
+                countyInput += COUNTY_FIPS[key] + ",";
+                ga('send', 'event', 'Counties', 'find', key);
+            }
         });
 
-        $.getJSON("../settings.json", function (json) {
-            // TODO: Retrieve KEY using route
-            $.ajax(BASE_URL, {
-                "method": "GET",
-                "data": {
-                    get: "NAME," + INCOME_BRACKETS,
-                    for: "county:" + countyInput.slice(0, -1),
-                    in: "state:" + STATE_FIP,
-                    key: json.KEY
-                },
-                "success": function (resp) {
-                    // console.log(resp);
-                    // console.log(INCOME_LABELS);
-                    var data = [];
+        if (countyInput !== "") {
+            $.getJSON("../settings.json", function (json) {
+                $.ajax(BASE_URL, {
+                    "method": "GET",
+                    "data": {
+                        get: "NAME," + INCOME_BRACKETS,
+                        for: "county:" + countyInput.slice(0, -1),
+                        in: "state:" + STATE_FIP,
+                        key: json.KEY
+                    },
+                    "success": function (resp) {
+                        // console.log(resp);
+                        // console.log(INCOME_LABELS);
+                        var data = [];
 
-                    if ($(".percentages").is(":checked")) {
-                        ga('send', 'event', 'Button', 'check', 'Percentages');
-                        for (i = 1; i < resp.length; i++) {
-                            var vals = resp[i].slice(1, -2);
-                            var sum = vals.reduce(getSum)
-                            var percentages = vals.map(function (x) { return x * 1.0 / sum });
-                            // console.log(percentages);
-                            resp[i].slice(1, -2) = percentages;
+                        if ($(".percentages").is(":checked")) {
+                            ga('send', 'event', 'Button', 'check', 'Percentages');
+                            for (i = 1; i < resp.length; i++) {
+                                var vals = resp[i].slice(1, -2);
+                                var sum = vals.reduce(getSum)
+                                var percentages = vals.map(function (x) { return x * 1.0 / sum });
+                                // console.log(percentages);
+                                resp[i].slice(1, -2) = percentages;
+                            }
                         }
+
+                        for (i = 1; i < resp.length; i++) {
+                            data.push({
+                                x: INCOME_LABELS,
+                                y: resp[i].slice(1, -2),
+                                name: resp[i][0],
+                                type: 'bar'
+                            });
+                        }
+
+                        var layout = { barmode: 'group' };
+                        Plotly.newPlot('myDiv', data, layout);
                     }
-
-                    for (i = 1; i < resp.length; i++) {
-                        data.push({
-                            x: INCOME_LABELS,
-                            y: resp[i].slice(1, -2),
-                            name: resp[i][0],
-                            type: 'bar'
-                        });
-                    }
-
-                    var layout = { barmode: 'group' };
-                    Plotly.newPlot('myDiv', data, layout);
-                }
-            });
-        })
-
-
+                });
+            })
+        } else {
+            $("#location-info").append('<div class="alert alert-danger alert-dismissible" role="alert">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                "Please enter a valid county name.</div>")
+        }
     });
 });
