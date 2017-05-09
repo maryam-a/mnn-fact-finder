@@ -40,18 +40,18 @@ ga('create', 'UA-97409379-1', 'auto');
 ga('send', 'pageview');
 
 function getSum(total, num) {
-    return total + num;
+    return parseInt(total) + parseInt(num);
 }
 
 $(document).ready(function () {
 
     $(document).on('click', "#submit", function (e) {
 
-        var queryType = $('.nav-tabs .active').text()
-        var brackets = ""
-        var labels = []
-        var plotTitle = ""
-
+        var queryType = $('.nav-tabs .active').text();
+        var brackets = "";
+        var labels = [];
+        var plotTitle = "";
+        var x_axis_label = "";
         console.log("here");
         console.log(queryType);
 
@@ -59,14 +59,17 @@ $(document).ready(function () {
             brackets = INCOME_BRACKETS;
             labels = INCOME_LABELS;
             plotTitle = "Household Income Distribution Across MA Counties";
+            x_axis_label = "Household Income";
         } else if (queryType == "Education") {
             brackets = ED_BRACKETS;
             labels = ED_LABELS;
             plotTitle = "Maximum Education Level Attained Across MA Counties";
+            x_axis_label = "Maximum Education Level Attained";
         } else if (queryType == "Age") {
             brackets = AGE_BRACKETS;
             labels = AGE_LABELS;
             plotTitle = "Age Distrubtion Across MA Counties";
+            x_axis_label = "Age";
         }
 
         //var incomeChoice = $('#income-options option:selected').val();
@@ -100,31 +103,78 @@ $(document).ready(function () {
                 key: KEY
             },
             "success": function (resp) {
-                console.log(resp);
-                console.log(INCOME_LABELS);
                 var data = [];
+                var y_vals = []
+                var names = []            
+                var y_axis_label = "";
+                var tick_format = "";
 
-                if ($(".percentages").is(":checked")) {
+                if ($("#percentages").is(":checked")) {
+                    y_axis_label = "Percentage of Population";
+                    tick_format = '%';
                     ga('send', 'event', 'Button', 'check', 'Percentages');
                     for (i = 1; i < resp.length; i++) { 
                         var vals = resp[i].slice(1,-2);
                         var sum = vals.reduce(getSum)
                         var percentages = vals.map(function(x) {return x*1.0/sum});
                         console.log(percentages);
-                        resp[i].slice(1,-2) = percentages;
+                        y_vals.push(percentages)
+                        names.push(resp[i][0].split(',')[0]);
+                    }
+                } else {
+                    y_axis_label = "Number of People";
+                    tick_format = '';
+                    for (i = 1; i < resp.length; i++) {
+                        y_vals.push(resp[i].slice(1,-2));
+                        names.push(resp[i][0].split(',')[0])
                     }
                 }
 
-                console.log(resp);
+                if ($("#state-compare").is(":checked")) {
+                    ga('send', 'event', 'Button', 'check', 'StateCompare');
+                    $.ajax(BASE_URL, {
+                        "async": false,
+                        "method": "GET",
+                        "data": {
+                            get: "NAME," + brackets,
+                            for: "county:*",
+                            in: "state:" + STATE_FIP,
+                            key: KEY
+                        },
+                    "success": function (resp2) {
+                        all_counties_data = [];
+                        for (i = 1; i < resp2.length; i++) { 
+                            single_county = resp2[i].slice(1,-2);
+                            all_counties_data.push(single_county)
+                        }
+                        all_counties_data = all_counties_data.reduce(function(array1, array2) {
+                            return array1.map(function(value, index) {
+                                return parseInt(value) + parseInt(array2[index]);
+                            });
+                        });
 
-                for (i = 1; i < resp.length; i++) { 
+                        if ($("#percentages").is(":checked")) {
+                            var sum = all_counties_data.reduce(getSum)
+                            all_counties_data = all_counties_data.map(function(x) {return x*1.0/sum});
+                        }
+                        
+                        y_vals.push(all_counties_data);
+                        names.push('Entire State');
+                    }});
+                }
+
+                console.log(y_vals);
+
+                for (i = 0; i < y_vals.length; i++) { 
                     data.push({
                         x: labels,
-                        y: resp[i].slice(1, -2),
-                        name: resp[i][0].split(',')[0],
+                        //y: resp[i].slice(1, -2),
+                        y: y_vals[i],
+                        name: names[i],
                         type: 'bar'
                     });
                 }
+
                 var layout = {
                     barmode: 'group', 
                     title: plotTitle,
@@ -132,7 +182,7 @@ $(document).ready(function () {
                     height: 600,
                     width: 900,
                     xaxis: {
-                        title: 'Household Income',
+                        title: x_axis_label,
                         titlefont: {
                             family: 'Helvetica',
                             size: 18,
@@ -140,7 +190,8 @@ $(document).ready(function () {
                         }
                     },
                     yaxis: {
-                        title: 'Number of People',
+                        title: y_axis_label,
+                        tickformat: tick_format,
                         titlefont: {
                             family: 'Helvetica',
                             size: 18,
