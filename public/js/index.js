@@ -48,17 +48,25 @@ $(document).ready(function () {
     $(document).on('click', "#submit", function (e) {
 
         var queryType = $('.nav-tabs .active').text()
+        var brackets = ""
+        var labels = []
+        var plotTitle = ""
+
         console.log("here");
         console.log(queryType);
+
         if (queryType == "Income") {
             brackets = INCOME_BRACKETS;
             labels = INCOME_LABELS;
+            plotTitle = "Household Income Distribution Across MA Counties";
         } else if (queryType == "Education") {
             brackets = ED_BRACKETS;
             labels = ED_LABELS;
+            plotTitle = "Maximum Education Level Attained Across MA Counties";
         } else if (queryType == "Age") {
             brackets = AGE_BRACKETS;
             labels = AGE_LABELS;
+            plotTitle = "Age Distrubtion Across MA Counties";
         }
 
         //var incomeChoice = $('#income-options option:selected').val();
@@ -117,10 +125,9 @@ $(document).ready(function () {
                         type: 'bar'
                     });
                 }
-
                 var layout = {
                     barmode: 'group', 
-                    title: 'Plot Title',
+                    title: plotTitle,
                     margin: {b: 150},
                     height: 600,
                     width: 900,
