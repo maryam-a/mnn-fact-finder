@@ -1,19 +1,19 @@
 var STATE_FIP = "25";
-var BASE_URL = "http://api.census.gov/data/2015/acs1";
+var BASE_URL = "https://api.census.gov/data/2015/acs1";
 
 var COUNTY_FIPS = {
-    "Barnstable" : "001",
-    "Berkshire" : "003",
-    "Bristol" : "005",
-    "Essex" : "009",
-    "Franklin" : "011",
-    "Hampden" : "013",
-    "Hampshire" : "015",
-    "Middlesex" : "017",
-    "Norfolk" : "021",
-    "Plymouth" : "023",
-    "Suffolk" : "025",
-    "Worcester" : "027"
+    "barnstable": "001",
+    "berkshire": "003",
+    "bristol": "005",
+    "essex": "009",
+    "franklin": "011",
+    "hampden": "013",
+    "hampshire": "015",
+    "middlesex": "017",
+    "norfolk": "021",
+    "plymouth": "023",
+    "suffolk": "025",
+    "worcester": "027"
 }
 
 var INCOME_BRACKETS = "B19001_002E,B19001_003E,B19001_004E,B19001_005E,B19001_006E,B19001_007E,B19001_008E,B19001_009E,B19001_010E,B19001_011E,B19001_012E,B19001_013E,B19001_014E,B19001_015E,B19001_017E";
@@ -28,13 +28,22 @@ var AGE_LABELS = ["Less than \n\$10,000", "\$10,000 to \n14,999", "\$15,000 to\n
 
 
 
+// Google Analytics
+(function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-97409379-1', 'auto');
+ga('send', 'pageview');
+
 function getSum(total, num) {
     return total + num;
 }
 
 $(document).ready(function () {
-
-
 
     $(document).on('click', "#submit", function (e) {
 
@@ -55,13 +64,23 @@ $(document).ready(function () {
         //var incomeChoice = $('#income-options option:selected').val();
         //var demographicChoice = $('#demographic-options option:selected').val();
 
+        ga('send', 'event', 'Button', 'submit');
+
+        // var demographicChoice = $('#demographic-options option:selected').val();
 
         var countyInput = "";
 
-        // TODO: Ensure that there is valid input
-
         $(".label-info").each(function () {
-            countyInput += COUNTY_FIPS[$(this).text()] + ",";
+            // Only process valid input strings
+            var key = $(this).text().toLowerCase();
+            if (COUNTY_FIPS[key]) {
+                countyInput += COUNTY_FIPS[key] + ",";
+                ga('send', 'event', 'Counties', 'find', key);
+            } else {
+                $("#location-info").append('<div class="alert alert-danger alert-dismissible" role="alert">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                "Please enter a valid county name.</div>")
+            }
         });
 
         $.ajax(BASE_URL, {
@@ -78,6 +97,7 @@ $(document).ready(function () {
                 var data = [];
 
                 if ($(".percentages").is(":checked")) {
+                    ga('send', 'event', 'Button', 'check', 'Percentages');
                     for (i = 1; i < resp.length; i++) { 
                         var vals = resp[i].slice(1,-2);
                         var sum = vals.reduce(getSum)
@@ -125,6 +145,5 @@ $(document).ready(function () {
                 Plotly.newPlot('myDiv', data, layout);
             }
         });
-
-    });
+    });    
 });

@@ -2,7 +2,7 @@
 settings.js
 
 # Jupyter Checkpoints
-.ipynb_checkpoints
+.ipynb_checkpoints/
 
 # Logs
 logs
