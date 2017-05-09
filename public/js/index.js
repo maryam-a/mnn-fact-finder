@@ -1,5 +1,5 @@
 var STATE_FIP = "25";
-var BASE_URL = "https://api.census.gov/data/2015/acs1";
+var BASE_URL = "http://api.census.gov/data/2015/acs1";
 
 var COUNTY_FIPS = {
     "barnstable": "001",
@@ -83,10 +83,10 @@ $(document).ready(function () {
 
         $(".label-info").each(function () {
             // Only process valid input strings
-            var key = $(this).text().toLowerCase();
-            if (COUNTY_FIPS[key]) {
-                countyInput += COUNTY_FIPS[key] + ",";
-                ga('send', 'event', 'Counties', 'find', key);
+            var label = $(this).text().toLowerCase();
+            if (COUNTY_FIPS[label]) {
+                countyInput += COUNTY_FIPS[label] + ",";
+                ga('send', 'event', 'Counties', 'find', label);
             } else {
                 $("#location-info").append('<div class="alert alert-danger alert-dismissible" role="alert">' +
                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
