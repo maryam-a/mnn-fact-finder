@@ -10,6 +10,7 @@ $(function() {
   $('a[data-toggle="tab"]').on('click', function (e) {
     $("#county-input").val('')
     Plotly.purge('myDiv');
+    $("#info-text").hide()
     //save the latest tab; use cookies if you like 'em better:
     //localStorage.setItem('currentTab', $(e.target).attr('href'));
     //window.location.reload();
