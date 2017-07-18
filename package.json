@@ -1,6 +1,9 @@
 {
   "name": "commonwealth-stats",
   "version": "1.0.0",
+  "engines": {
+    "node": "6.11.1"
+  },
   "description": "Tool for Nonprofits",
   "main": "app.js",
   "scripts": {
@@ -18,13 +21,13 @@
   },
   "homepage": "https://github.com/maryam-a/mnn-fact-finder#readme",
   "dependencies": {
-    "express": "^4.15.2",
     "assert": "^1.4.1",
-    "body-parser": "^1.15.2",
-    "chance": "^1.0.4",
+    "body-parser": "^1.17.2",
+    "chance": "^1.0.10",
     "cookie-parser": "^1.4.3",
-    "cookie-session": "^2.0.0-alpha.1",
-    "debug": "^2.2.0",
+    "cookie-session": "^2.0.0-beta.2",
+    "debug": "^2.6.8",
+    "express": "^4.15.3",
     "morgan": "~1.7.0",
     "path": "^0.12.7"
   }
